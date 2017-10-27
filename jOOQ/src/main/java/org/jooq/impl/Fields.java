@@ -102,16 +102,13 @@ final class Fields<R extends Record> extends AbstractQueryPart implements Record
 
         for (Field<?> f : fields) {
             String fName = f.getName();
+            String tName = tableName(f);
 
-            if (tableName != null) {
-                String tName = tableName(f);
-
-                if (tName != null && tableName.equals(tName) && fName.equals(fieldName))
+            if (tableName != null && tName != null) {
+                if (tableName.equals(tName) && fName.equals(fieldName))
                     return (Field<T>) f;
-            }
-
-            // In case no exact match was found, return the first field with matching name
-            if (fName.equals(fieldName)) {
+            } else if (fName.equals(fieldName)) {
+                // In case no exact match was found, return the first field with matching name if the table is unspecified.
                 if (columnMatch == null)
                     columnMatch = f;
                 else
